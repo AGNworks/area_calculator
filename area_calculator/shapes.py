@@ -15,7 +15,6 @@ class Circle(Shape):
         if radius <= 0 or not isinstance(radius, (float, int)) or isinstance(radius, bool):
             raise ValueError("The radius of a circle should be positive number")
         self.radius = radius
-        print(self.radius)
 
     def area(self) -> float:
         try:
@@ -32,9 +31,9 @@ class Triangle(Shape):
 
     def __init__(self, a: float, b: float, c: float):
         if any(side <= 0 for side in [a, b, c]):
-            raise ValueError("All the sides should be positive numeber")
+            raise ValueError("All the sides should be positive number!")
         if not self._is_valid_triangle(a, b, c):
-            raise ValueError("Треугольник с такими сторонами не существует")
+            raise ValueError("Triangle with these side lengths not exist!")
         self.a = a
         self.b = b
         self.c = c
@@ -56,7 +55,14 @@ class Triangle(Shape):
         Check if it is a right triangle.
         """
 
-        pass
+        try:
+            # Sort the sides
+            sides = sorted([self.a, self.b, self.c])
+            # Check if it is right triangle with Pythagorean theorem
+            return math.isclose(sides[0]**2 + sides[1]**2, sides[2]**2, rel_tol=1e-9)
+        except:
+            print('There is not valid data for the triangle! Check the sides!')
+            raise ValueError('Not valid triangle')
 
     @staticmethod
     def _is_valid_triangle(a: float, b: float, c: float) -> bool:

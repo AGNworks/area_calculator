@@ -47,10 +47,11 @@ def is_right_triangle(a: float, b: float, c: float) -> bool:
     Check if triangle is right-angled using Pythagorean theorem.
     """
 
-    if not all(isinstance(side, (int, float)) for side in [a, b, c]):
-        return None
-    sides = sorted([a, b, c])
-    return math.isclose(sides[0]**2 + sides[1]**2, sides[2]**2, rel_tol=1e-3)
+    try:
+        triangle = calculator.shapes.Triangle(a, b, c)
+        return triangle.is_right()
+    except:
+        return False
 
 
 # Circle tests
@@ -93,16 +94,22 @@ def test_triangle_area(test_data: Dict[str, Any]):
         assert actual_area is None
 
 
-# # Additional test for right triangle check if the data includes this field
-# @pytest.mark.parametrize("test_data", [t for t in triangle_tests if "is_right_triangle" in t])
-# def test_right_triangle_check(test_data: Dict[str, Any]):
-#     if "is_right_triangle" not in test_data:
-#         pytest.skip("Test data doesn't contain is_right_triangle field")
+# Test for right triangle check if the data includes this field
+@pytest.mark.parametrize("test_data", [t for t in triangle_tests if "is_right_triangle" in t])
+def test_right_triangle_check(test_data: Dict[str, Any]):
+    """
+    Test for is_right method.
+    """
 
-#     a, b, c = test_data["a"], test_data["b"], test_data["c"]
-#     expected_right = test_data["is_right_triangle"]
+    # Check if we have information in json data
+    if "is_right_triangle" not in test_data:
+        pytest.skip("Test data doesn't contain is_right_triangle field")
 
-#     # Only check if the input is valid
-#     if test_data["correct_input"] and all(isinstance(side, (int, float)) for side in [a, b, c]):
-#         actual_right = is_right_triangle(a, b, c)
-#         assert actual_right == expected_right
+    # Get the sides from the test data
+    a, b, c = test_data["a"], test_data["b"], test_data["c"]
+    expected_right = test_data["is_right_triangle"]
+
+    # Only check if the input is valid
+    if test_data["correct_input"] and all(isinstance(side, (int, float)) for side in [a, b, c]):
+        actual_right = is_right_triangle(a, b, c)
+        assert actual_right == expected_right
